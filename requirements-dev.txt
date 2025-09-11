@@ -1,0 +1,18 @@
+# Development and testing dependencies
+pytest>=7.0.0
+pytest-cov>=3.0.0
+pytest-mock>=3.6.1
+pytest-asyncio>=0.21.0
+black>=22.0.0
+flake8>=4.0.0
+mypy>=0.950
+responses>=0.20.0
+build>=0.10.0
+twine>=4.0.0
+
+# All framework dependencies for testing
+django>=4.0
+djangorestframework>=3.14.0
+flask>=2.0.0
+fastapi>=0.100.0
+uvicorn>=0.18.0

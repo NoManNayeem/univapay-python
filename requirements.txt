@@ -1,0 +1,21 @@
+# Core dependencies
+requests>=2.28.0
+pydantic>=2.0.0
+python-dateutil>=2.8.2
+cryptography>=38.0.0  # For webhook signature verification
+
+# Development dependencies (optional)
+# Create requirements-dev.txt for these:
+# pytest>=7.0.0
+# pytest-cov>=3.0.0
+# pytest-mock>=3.6.1
+# pytest-asyncio>=0.21.0
+# black>=22.0.0
+# flake8>=4.0.0
+# mypy>=0.950
+# responses>=0.20.0
+
+# Framework-specific (install with extras)
+# pip install univapay[django]
+# pip install univapay[flask]
+# pip install univapay[fastapi]
