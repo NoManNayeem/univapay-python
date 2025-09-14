@@ -11,6 +11,10 @@ venv/
 ENV/
 env/
 
+
+# Knowledgebase
+knowledgebase/
+
 # Packaging / build artefacts
 build/
 dist/

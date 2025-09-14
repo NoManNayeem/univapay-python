@@ -1,6 +1,6 @@
 site_name: Univapay-Python SDK
 site_description: Documentation for the Univapay-Python SDK (unofficial)
-site_url: ""
+site_url: "https://github.com/NoManNayeem/Univapay-Python"
 repo_url: https://github.com/NoManNayeem/Univapay-Python
 theme:
   name: material
@@ -18,11 +18,15 @@ plugins:
             show_if_no_docstring: true
             heading_level: 2
 nav:
-  - Home: docs/index.md
-  - Quickstart: docs/Quickstart.md
-  - Using with Python: docs/Using-with-Python.md
-  - Using with Django & DRF: docs/Using-with-Django-and-DRF.md
-  - Using with FastAPI: docs/Using-with-FastAPI.md
+  - Home: index.md
+  - Quickstart: Quickstart.md
+  - Configuration: Configuration.md
+  - Widgets: Widgets.md
+  - Webhooks: Webhooks.md
+  - Examples: Examples.md
+  - Errors & Debugging: Errors-and-Debugging.md
+  - Using with Python: Using-with-Python.md
+  - Using with Django & DRF: Using-with-Django-and-DRF.md
+  - Using with FastAPI: Using-with-FastAPI.md
   - API Reference:
-      - SDK API: docs/API.md
-
+      - SDK API: API.md

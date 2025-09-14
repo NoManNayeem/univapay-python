@@ -15,9 +15,9 @@ python -m pip install -e ".[dotenv]"
 
 Set the following environment variables (or use a `.env` file):
 
-- `UNIVAPAY_JWT` — App Token (JWT)
-- `UNIVAPAY_SECRET` — Server secret
-- `UNIVAPAY_STORE_ID` — Your store id (often required)
+-  `UNIVAPAY_JWT` - App Token (JWT) 
+-  `UNIVAPAY_SECRET` - Server secret 
+-  `UNIVAPAY_STORE_ID` - Your store id (often required) 
 
 Optional:
 

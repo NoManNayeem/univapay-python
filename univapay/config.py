@@ -11,6 +11,9 @@ try:
 except Exception:
     pass
 
+# Error types
+from .errors import UnivapayConfigError
+
 
 # ----------------------------- helpers -----------------------------
 
@@ -195,14 +198,16 @@ class UnivapayConfig:
                 "Validation failed: jwt/secret missing",
                 {"jwt": _mask(self.jwt, "jwt"), "secret": _mask(self.secret, "secret")},
             )
-            raise RuntimeError("UNIVAPAY_JWT and UNIVAPAY_SECRET are required for server-side API calls.")
+            raise UnivapayConfigError(
+                "UNIVAPAY_JWT and UNIVAPAY_SECRET are required for server-side API calls."
+            )
         _dprint(bool(self.debug), "Validation OK")
         return self
 
     def require_store_id(self) -> str:
         """Ensure a store_id is present for endpoints that need it."""
         if not self.store_id:
-            raise RuntimeError("UNIVAPAY_STORE_ID is required for this operation.")
+            raise UnivapayConfigError("UNIVAPAY_STORE_ID is required for this operation.")
         return self.store_id
 
     def masked(self) -> dict:
