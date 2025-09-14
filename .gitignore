@@ -66,3 +66,19 @@ examples/**/__pycache__/
 examples/**/*.log
 examples/**/*.tmp
 examples/**/tmp/
+
+
+
+.venv/
+.env
+.vscode/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+build/
+dist/
+*.egg-info/
+site/              # MkDocs build output
+*.sqlite3
+*.db
