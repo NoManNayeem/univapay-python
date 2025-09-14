@@ -1,0 +1,1 @@
+# (Not used directly—DB helpers live in app.py. Kept for future expansion.)

@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="admin-actions" style="margin-bottom:12px; display:flex; gap:12px; align-items:center;">
+    <div>
+      Show:
+      <a href="{{ url_for('admin', limit=50) }}">50</a> ·
+      <a href="{{ url_for('admin', limit=200) }}">200</a> ·
+      <a href="{{ url_for('admin', limit='all') }}">All</a>
+    </div>
+    <div>
+      <a class="btn btn-sm" href="{{ url_for('admin_export') }}" download>Export JSON (all)</a>
+    </div>
+  </div>
+  <h2>Admin</h2>
+  <p>Latest data saved to <code>app.sqlite3</code>. Use the buttons to test <b>refund</b> and <b>cancel</b> flows.</p>
+
+  <h3>Charges</h3>
+  {% if not charges %}
+    <p class="muted">No charges yet.</p>
+  {% else %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>id</th><th>status</th><th>amount</th><th>currency</th><th>token</th><th>actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in charges %}
+      <tr>
+        <td><code>{{ c["id"] }}</code></td>
+        <td>{{ c["status"] or "" }}</td>
+        <td>{{ c["amount"] }}</td>
+        <td>{{ (c["currency"] or "")|upper }}</td>
+        <td class="small">{{ c["token_id"] or "" }}</td>
+        <td>
+          <button class="btn btn-sm refund" data-id="{{ c['id'] }}">Refund</button>
+          <button class="btn btn-sm cancel" data-id="{{ c['id'] }}">Cancel</button>
+          <button class="btn btn-sm charge-refresh" data-id="{{ c['id'] }}">Refresh</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <h3>Subscriptions</h3>
+  {% if not subs %}
+    <p class="muted">No subscriptions yet.</p>
+  {% else %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>id</th><th>status</th><th>amount</th><th>currency</th><th>period</th><th>token</th><th>actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in subs %}
+      <tr>
+        <td><code>{{ s["id"] }}</code></td>
+        <td>{{ s["status"] or "" }}</td>
+        <td>{{ s["amount"] }}</td>
+        <td>{{ (s["currency"] or "")|upper }}</td>
+        <td>{{ s["period"] or "" }}</td>
+        <td class="small">{{ s["token_id"] or "" }}</td>
+        <td>
+          <button class="btn btn-sm sub-cancel" data-id="{{ s['id'] }}">Cancel</button>
+          <button class="btn btn-sm sub-refresh" data-id="{{ s['id'] }}">Refresh</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <h3>Refunds</h3>
+  {% if not refunds %}
+    <p class="muted">No refunds yet.</p>
+  {% else %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>id</th><th>charge_id</th><th>amount</th><th>status</th><th>actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in refunds %}
+      <tr>
+        <td><code>{{ r["id"] }}</code></td>
+        <td class="small">{{ r["charge_id"] }}</td>
+        <td>{{ r["amount"] }}</td>
+        <td>{{ r["status"] or "" }}</td>
+        <td>
+          <button class="btn btn-sm refund-refresh" data-refund-id="{{ r['id'] }}" data-charge-id="{{ r['charge_id'] }}">Refresh</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <h3>Webhook Events (raw)</h3>
+  {% if not events %}
+    <p class="muted">No webhook events received.</p>
+  {% else %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>id</th><th>type</th><th>resource</th><th>created_on</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in events %}
+      <tr>
+        <td>{{ e["id"] }}</td>
+        <td>{{ e["type"] or "" }}</td>
+        <td>{{ e["resource_type"] or "" }}</td>
+        <td class="small">{{ e["created_on"] or "" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+{% endblock %}

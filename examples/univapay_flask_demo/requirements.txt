@@ -1,0 +1,4 @@
+Flask>=3.0
+python-dotenv>=1.0
+# The SDK should be installed in editable mode from the repo root:
+# pip install -e ".[dotenv]"

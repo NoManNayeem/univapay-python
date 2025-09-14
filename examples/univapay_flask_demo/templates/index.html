@@ -1,0 +1,75 @@
+﻿{% extends "layout.html" %}
+{% block content %}
+  <section class="hero">
+    <h2>Try one-time, subscription, and recurring flows</h2>
+    <p>This demo uses your <code>UNIVAPAY_*</code> credentials and the Python SDK.</p>
+    <p>Toggles below are passed through to the widget config (adapt keys to your account).</p>
+  </section>
+
+  <section class="toggles" aria-label="Payment method toggles">
+    <label>
+      <input type="checkbox" id="gate-card" {% if gateway_toggles and gateway_toggles.get('card') %}checked{% endif %}>
+      Card
+    </label>
+    <label>
+      <input type="checkbox" id="gate-konbini" {% if gateway_toggles and gateway_toggles.get('konbini') %}checked{% endif %}>
+      Konbini
+    </label>
+    <label>
+      <input type="checkbox" id="gate-bank" {% if gateway_toggles and gateway_toggles.get('bank_transfer') %}checked{% endif %}>
+      Bank transfer
+    </label>
+    <span class="muted">Online wallets:</span>
+    <label><input type="checkbox" id="gate-paypay"> PayPay</label>
+    <label><input type="checkbox" id="gate-alipay"> Alipay</label>
+    <label><input type="checkbox" id="gate-alipay-plus"> Alipay+</label>
+    <label><input type="checkbox" id="gate-wechat"> WeChat Pay</label>
+    <label><input type="checkbox" id="gate-dbarai"> d払い</label>
+  </section>
+
+  {% if not products %}
+    <p class="muted">No products found. Seeded items should appear on first run.</p>
+  {% endif %}
+
+  <section class="grid">
+    {% for p in products %}
+      <article class="card">
+        <h3>{{ p["name"] }}</h3>
+        <div class="muted">{{ p["sku"] }}</div>
+        <p>{{ p["description"] or "" }}</p>
+        <div class="price">
+          Amount (minor): <b>{{ p["amount_minor"] }}</b> {{ p["currency"]|upper }}
+        </div>
+        {% if p["kind"] == "subscription" %}
+          <div class="muted">Period: {{ p["period"] }}</div>
+        {% endif %}
+        <div class="actions">
+          <button class="btn"
+                  data-kind="{{ p['kind'] }}"
+                  data-amount="{{ p['amount_minor'] }}"
+                  data-currency="{{ p['currency'] }}"
+                  data-period="{{ p['period'] or '' }}"
+                  data-sku="{{ p['sku'] }}">
+            {% if p["kind"] == "one_time" %}
+              Pay now
+            {% elif p["kind"] == "subscription" %}
+              Subscribe
+            {% else %}
+              Create recurring token
+            {% endif %}
+          </button>
+        </div>
+      </article>
+    {% endfor %}
+  </section>
+
+  <section class="notes">
+    <h4>How it works</h4>
+    <ol>
+      <li>Click a button â†’ We fetch <code>/api/widget-config</code> for the chosen product.</li>
+      <li>The Univapay widget opens; on success we receive a token/charge/subscription id.</li>
+      <li>We call our server (<code>/api/charges</code> or <code>/api/subscriptions</code>) to finalize and store.</li>
+      <li>Visit the <a href="{{ url_for('admin') }}">Admin screen</a> to inspect the latest records.</li>
+    </ol>
+  </section>
+{% endblock %}

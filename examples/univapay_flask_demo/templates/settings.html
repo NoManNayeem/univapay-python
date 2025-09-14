@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h2>Settings</h2>
+  <p class="muted">Provide your Univapay credentials here for testing (stored locally in SQLite).</p>
+  <form method="post" action="{{ url_for('settings_save') }}" class="form">
+    <div class="form-row">
+      <label for="UNIVAPAY_JWT">UNIVAPAY_JWT (App Token)</label>
+      <input type="text" id="UNIVAPAY_JWT" name="UNIVAPAY_JWT" value="{{ values.UNIVAPAY_JWT or '' }}" placeholder="eyJ0eXAiOiJKV..." />
+    </div>
+    <div class="form-row">
+      <label for="UNIVAPAY_SECRET">UNIVAPAY_SECRET</label>
+      <input type="password" id="UNIVAPAY_SECRET" name="UNIVAPAY_SECRET" value="{{ values.UNIVAPAY_SECRET or '' }}" />
+    </div>
+    <div class="form-row">
+      <label for="UNIVAPAY_STORE_ID">UNIVAPAY_STORE_ID</label>
+      <input type="text" id="UNIVAPAY_STORE_ID" name="UNIVAPAY_STORE_ID" value="{{ values.UNIVAPAY_STORE_ID or '' }}" />
+    </div>
+    <div class="form-row">
+      <label for="UNIVAPAY_WEBHOOK_SECRET">UNIVAPAY_WEBHOOK_SECRET</label>
+      <input type="password" id="UNIVAPAY_WEBHOOK_SECRET" name="UNIVAPAY_WEBHOOK_SECRET" value="{{ values.UNIVAPAY_WEBHOOK_SECRET or '' }}" />
+    </div>
+    <div class="form-row">
+      <label for="UNIVAPAY_BASE_URL">UNIVAPAY_BASE_URL</label>
+      <input type="text" id="UNIVAPAY_BASE_URL" name="UNIVAPAY_BASE_URL" value="{{ values.UNIVAPAY_BASE_URL or '' }}" />
+    </div>
+    <div class="form-row">
+      <label for="UNIVAPAY_WIDGET_URL">UNIVAPAY_WIDGET_URL (optional override)</label>
+      <input type="text" id="UNIVAPAY_WIDGET_URL" name="UNIVAPAY_WIDGET_URL" value="{{ values.UNIVAPAY_WIDGET_URL or '' }}" placeholder="https://widget.univapay.com/client/checkout.js" />
+    </div>
+    <div class="form-actions">
+      <button class="btn" type="submit">Save</button>
+      <a class="btn btn-secondary" href="{{ url_for('admin') }}">Back to Admin</a>
+    </div>
+  </form>
+{% endblock %}
+

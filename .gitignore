@@ -1,0 +1,64 @@
+# ----------------------
+# Python cache & builds
+# ----------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual envs
+.venv/
+venv/
+ENV/
+env/
+
+# Packaging / build artefacts
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+*.whl
+
+# Test / tooling caches
+.pytest_cache/
+.mypy_cache/
+.pytype/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.hypothesis/
+.tox/
+.nox/
+.cache/
+.ruff_cache/
+
+# Editors / OS junk
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.log
+
+# Pyenv
+.python-version
+
+# Jupyter (just in case)
+.ipynb_checkpoints/
+
+# ----------------------
+# Project specifics
+# ----------------------
+# Local env files (keep example)
+.env
+.env.*
+!.env.example
+
+# Example outputs (if any)
+examples/**/__pycache__/
+examples/**/*.log
+examples/**/*.tmp
+examples/**/tmp/

@@ -1,0 +1,146 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Univapay Flask Demo</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link rel="icon" href="data:," />
+
+    <!-- Expose endpoints to the frontend -->
+    <script>
+      window.FLASK_DEMO = {
+        // boolean, not a string
+        debug: {{ config.DEBUG | default(false, true) | tojson }},
+        appId: {{ (config.UNIVAPAY_APP_ID or '') | tojson }},
+        endpoints: {
+          widgetConfig: "{{ url_for('widget_config') }}",
+          createCharge: "{{ url_for('create_charge') }}",
+          createSubscription: "{{ url_for('create_subscription') }}",
+          // For these, we bake a placeholder into the URL at render-time and
+          // replace "__ID__" on the client before calling.
+          refundCharge: "{{ url_for('refund_charge', charge_id='__ID__') }}",
+          cancelCharge: "{{ url_for('cancel_charge', charge_id='__ID__') }}",
+          webhook: "{{ url_for('webhook') }}"
+        }
+      };
+
+      // Tiny logger the whole app can use
+      window.__demoLog = function (...args) {
+        try {
+          console.log('[FE]', ...args);
+          const el = document.getElementById('event-log');
+          if (el) {
+            const line = document.createElement('div');
+            line.textContent = args
+              .map(a => {
+                try {
+                  return typeof a === 'string' ? a : JSON.stringify(a);
+                } catch {
+                  return String(a);
+                }
+              })
+              .join(' ');
+            el.prepend(line);
+          }
+        } catch (e) {}
+      };
+    </script>
+
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <h1>Univapay Demo</h1>
+      </div>
+      <nav class="nav">
+        <a href="{{ url_for('customer') }}">Customer</a>
+        <a href="{{ url_for('admin') }}">Admin</a>
+        <a href="{{ url_for('settings_view') }}">Settings</a>
+        <a href="https://docs.univapay.com/" target="_blank" rel="noreferrer">Docs</a>
+      </nav>
+      <div class="role">
+        Role: <strong>{{ role|capitalize }}</strong>
+        {% if role == 'merchant' %}
+          <a href="{{ url_for('set_role', role='customer') }}" class="role-btn">Switch to Customer</a>
+        {% else %}
+          <a href="{{ url_for('set_role', role='merchant') }}" class="role-btn">Switch to Merchant</a>
+        {% endif %}
+      </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-wrap">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Collapsible debug console (shows widget events & FE logs) -->
+    <aside class="console">
+      <details open>
+        <summary>Event Console</summary>
+        <div id="event-log" class="console-body"></div>
+      </details>
+    </aside>
+
+    <!-- Load the official Univapay widget library with CDN fallback.
+         You can set UNIVAPAY_WIDGET_URL in .env to force a specific URL. -->
+    <script>
+      (function() {
+        function load(src, onload, onerror) {
+          var s = document.createElement('script');
+          s.src = src;
+          s.async = true;
+          s.onload = onload;
+          s.onerror = onerror;
+          document.head.appendChild(s);
+        }
+        var forced = {{ (config.UNIVAPAY_WIDGET_URL or '') | tojson }};
+        var primary = 'https://widget.univapay.com/client/checkout.js';
+        var fallback = 'https://widget.univapay.com/loader/v1.js';
+        var proxy = '{{ url_for('widget_checkout_js') }}';
+        if (forced) {
+          console.log('[Widget] Using forced URL from UNIVAPAY_WIDGET_URL:', forced);
+          load(forced, function(){
+            console.log('[Widget] Loaded forced URL');
+          }, function(){
+            console.error('[Widget] Failed to load forced URL:', forced);
+          });
+        } else {
+          load(primary, function() {
+            console.log('[Widget] Loaded:', primary);
+          }, function() {
+            console.warn('[Widget] Failed to load:', primary, 'Ã¢â€ â€™ trying fallback');
+            load(fallback, function(){
+              console.log('[Widget] Loaded fallback:', fallback);
+            }, function(){
+              console.warn('[Widget] Failed to load CDN fallback Ã¢â€ â€™ trying server proxy');
+              load(proxy, function(){
+                console.log('[Widget] Loaded via proxy:', proxy);
+              }, function(){
+                console.error('[Widget] Failed to load widget via all methods (primary, fallback, proxy)');
+              });
+            });
+          });
+        }
+      })();
+    </script>
+
+    <!-- Global app JS (relies on Univapay global from the loader above) -->
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>
